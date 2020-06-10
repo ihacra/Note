@@ -27,6 +27,7 @@ public class Application {
 
 		System.out.println(DateUtils.formatDate(lastModifyDate, DateUtils.DATE_TIME_PATTERN));
 		System.out.println(noteLog.toString());
+		print2(catalogList);
 	}
 	
 	public static void print(List<Catalog> catalogList) {
@@ -34,6 +35,18 @@ public class Application {
 			System.out.println(catalog.toString());
 			if (!catalog.getDetList().isEmpty()) {
 				print(catalog.getDetList());
+			}
+		}
+	}
+	
+	public static void print2(List<Catalog> catalogList) {
+		for (Catalog catalog : catalogList) {
+			for (int i = 0; i < catalog.getLevel(); i++) {
+				System.out.print(" ");
+			}
+			System.out.println(catalog.getName());
+			if (!catalog.getDetList().isEmpty()) {
+				print2(catalog.getDetList());
 			}
 		}
 	}

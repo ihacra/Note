@@ -13,6 +13,7 @@ import com.hacra.note.utils.StringUtils;
  */
 public class Catalog {
 	
+	private int level;
 	private String name;
 	private String path;
 	private String shortName;
@@ -30,6 +31,14 @@ public class Catalog {
 		this.directory = directory;
 	}
 	
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -73,6 +82,7 @@ public class Catalog {
 
 	@Override
 	public String toString() {
-		return "Catalog [directory=" + directory + ", shortName=" + shortName + ", path=" + path + "]";
+		return "Catalog [level=" + level + ", directory=" + directory + ", shortName=" + shortName + ", path=" + path
+				+ "]";
 	}
 }

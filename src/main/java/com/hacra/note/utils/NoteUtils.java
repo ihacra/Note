@@ -80,21 +80,24 @@ public final class NoteUtils {
 			if (files != null && files.length > 0) {
 				for (File det : files) {
 					String name = det.getName();
-					if (det.isDirectory()) {
-						if (!StringUtils.contains(name, Global.EXCLUDE_FOLDERS)) {
-							List<Catalog> detList = match(det.getAbsolutePath());
-							if (!detList.isEmpty()) {
-								Catalog catalog = new Catalog(true);
-								catalog.setDetList(detList);
-								catalogList.add(catalog);
-							}
-						}
-					} else {
+					if (!det.isDirectory()) {
 						if (StringUtils.sameFileType(name, Global.MARKDOWN_SUFFIX) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
 							Catalog catalog = new Catalog(false);
+							catalog.setLevel(level);
 							catalog.setName(name);
 							catalog.setPath(det.getPath());
 							catalogList.add(catalog);
+						}
+					} else {
+						if (!StringUtils.contains(name, Global.EXCLUDE_FOLDERS)) {
+							List<Catalog> detList = match(det.getAbsolutePath(), level+1);
+							if (!detList.isEmpty()) {
+								Catalog catalog = new Catalog(true);
+								catalog.setLevel(level);
+								catalog.setName(name);
+								catalog.setDetList(detList);
+								catalogList.add(catalog);
+							}
 						}
 					}
 				}
