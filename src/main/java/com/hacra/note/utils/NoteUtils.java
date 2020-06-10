@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.hacra.note.Application;
 import com.hacra.note.bean.Catalog;
 import com.hacra.note.config.Global;
 
@@ -22,8 +22,8 @@ public final class NoteUtils {
 	 * 初始化项目
 	 */
 	public static void init() {
-		String themePath = Application.PATH + "\\" + Global.CSS_THEME;
-		String markdownPath = Application.PATH + "\\" + Global.CSS_MARKDOWN;
+		String themePath = Global.NOTE_PATH + "\\" + Global.CSS_THEME;
+		String markdownPath = Global.NOTE_PATH + "\\" + Global.CSS_MARKDOWN;
 		try {
 			File srcfile = new File(Global.SRC_THEME_PATH);
 			File outFile = new File(themePath);
@@ -41,26 +41,65 @@ public final class NoteUtils {
 	}
 	
 	/**
-	 * 查找Markdown文件
-	 * @param Offset 
+	 * 获取日志中最后编译日期
+	 * @param path
 	 * @return
 	 */
-	public static List<Catalog> match(int Offset) {
+	public static Date getLastModifyDate() {
+		File logFile = new File(Global.NOTE_PATH + "\\" + Global.LOG_NAME);
+		String content = FileUtils.readFile(logFile); 
+		if (content != null && content.length() >= DateUtils.DATE_TIME_PATTERN.length()) {
+			String regex = "^[\\d]{4}-[\\d]{2}-[\\d]{2}\\s[\\d]{2}:[\\d]{2}:[\\d]{2}$";
+			content = content.substring(0, DateUtils.DATE_TIME_PATTERN.length());
+			if (content.matches(regex)) {
+				return DateUtils.parseDate(content, DateUtils.DATE_TIME_PATTERN);
+			}
+		}
+		return new Date(0);
+	}
+	
+	/**
+	 * 查找Markdown文件
+	 * @param path 
+	 * @return
+	 */
+	public static List<Catalog> match(String path) {
+		return match(path, 0);
+	}
+	
+	/**
+	 * 查找Markdown文件
+	 * @param path 
+	 * @return
+	 */
+	public static List<Catalog> match(String path, int level) {
 		List<Catalog> catalogList = new ArrayList<Catalog>(32);
-		Catalog catalog1 = new Catalog("a", "/a");
-		List<Catalog> list = new ArrayList<Catalog>(32);
-		list.add(new Catalog("a1", "/a/1"));
-		list.add(new Catalog("a2", "/a/2"));
-		list.add(new Catalog("a3", "/a/3"));
-		catalog1.setDetList(list);
-		catalogList.add(catalog1);
-		catalog1 = new Catalog("b", "/b");
-		list = new ArrayList<Catalog>(32);
-		list.add(new Catalog("b1", "/b/1"));
-		list.add(new Catalog("b2", "/b/2"));
-		list.add(new Catalog("b3", "/b/3"));
-		catalog1.setDetList(list);
-		catalogList.add(catalog1);
+		File file = new File(path);
+		if (file.exists()) {
+			File[] files = file.listFiles();
+			if (files != null && files.length > 0) {
+				for (File det : files) {
+					String name = det.getName();
+					if (det.isDirectory()) {
+						if (!StringUtils.contains(name, Global.EXCLUDE_FOLDERS)) {
+							List<Catalog> detList = match(det.getAbsolutePath());
+							if (!detList.isEmpty()) {
+								Catalog catalog = new Catalog(true);
+								catalog.setDetList(detList);
+								catalogList.add(catalog);
+							}
+						}
+					} else {
+						if (StringUtils.sameFileType(name, Global.MARKDOWN_SUFFIX) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
+							Catalog catalog = new Catalog(false);
+							catalog.setName(name);
+							catalog.setPath(det.getPath());
+							catalogList.add(catalog);
+						}
+					}
+				}
+			}
+		}
 		return catalogList;
 	}
 }
