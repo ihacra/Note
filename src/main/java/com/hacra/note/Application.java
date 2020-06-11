@@ -18,16 +18,17 @@ import com.hacra.note.utils.NoteUtils;
 public class Application {
 	
 	public static void main(String[] args) {
-		Global.NOTE_PATH = "F:\\Note";
+		Global.NOTE_PATH = "E:\\Note";
 		
 		NoteUtils.init();
 		Date lastModifyDate = NoteUtils.getLastModifyDate();
 		List<Catalog> catalogList = NoteUtils.match(Global.NOTE_PATH);
-		StringBuilder noteLog = MarkdownUtils.markdownToHtml(catalogList, lastModifyDate.getTime());
+		MarkdownUtils.markdownToHtml(catalogList, lastModifyDate.getTime());
 
 		System.out.println(DateUtils.formatDate(lastModifyDate, DateUtils.DATE_TIME_PATTERN));
-		System.out.println(noteLog.toString());
-		print2(catalogList);
+		System.out.println(NoteUtils.NOTE_LOG.toString());
+		print(catalogList);		
+		System.out.println(NoteUtils.getCatalogHtml().toString());
 	}
 	
 	public static void print(List<Catalog> catalogList) {
@@ -42,7 +43,7 @@ public class Application {
 	public static void print2(List<Catalog> catalogList) {
 		for (Catalog catalog : catalogList) {
 			for (int i = 0; i < catalog.getLevel(); i++) {
-				System.out.print(" ");
+				System.out.print("+ ");
 			}
 			System.out.println(catalog.getName());
 			if (!catalog.getDetList().isEmpty()) {

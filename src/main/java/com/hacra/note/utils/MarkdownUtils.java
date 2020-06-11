@@ -25,34 +25,41 @@ public final class MarkdownUtils {
 	 * @param catalogList
 	 * @param lastModifyDate
 	 */
-	public static StringBuilder markdownToHtml(List<Catalog> catalogList, long lastModifyTime) {
-		StringBuilder noteLog = new StringBuilder(catalogList.size()<<5);
+	public static void markdownToHtml(List<Catalog> catalogList, long lastModifyTime) {
 		for (Catalog catalog : catalogList) {
 			if (catalog.isDirectory()) {
-				noteLog.append(markdownToHtml(catalog.getDetList(), lastModifyTime));
+				NoteUtils.appendCatalogHtml("<li>");
+				NoteUtils.appendCatalogHtml(catalog.getName());
+				NoteUtils.appendCatalogHtml("<ul>");
+				markdownToHtml(catalog.getDetList(), lastModifyTime);
+				NoteUtils.appendCatalogHtml("</ul></li>");
 			} else {
 				File file = new File(catalog.getPath());
-				if (file.exists() && file.lastModified() >= lastModifyTime) {
-					markdownToHtml(file, catalog.getShortName());
-					noteLog.append(catalog.showInfo()).append("\n");
+				if (file.exists()) {
+					if (file.lastModified() >= lastModifyTime) {
+						markdownToHtml(file, catalog);
+						NoteUtils.NOTE_LOG.append(catalog.showInfo()).append("\n");
+					}
+					NoteUtils.appendCatalogHtml("<li>");
+					NoteUtils.appendCatalogHtml(catalog.getName());
+					NoteUtils.appendCatalogHtml("</li>");
 				}
 			}
 		}
-		return noteLog;
 	}
 	
 	/**
 	 * 将Markdown文件转为Html文件
 	 * @param file
 	 */
-	private static void markdownToHtml(File file, String name) {
+	private static void markdownToHtml(File file, Catalog catalog) {
 		String md = FileUtils.readFile(file);
 		String html = HTML_RENDERER.render(PARSER.parse(md));
 		StringBuilder stringBuilder = new StringBuilder(html.length() + 1024);
 		stringBuilder.append("<html><head><title>")
-			.append(name)
-			.append("</title><link rel='stylesheet' type='text/css' href='file:///")
-			.append(Global.NOTE_PATH).append("\\").append(Global.CSS_MARKDOWN)
+			.append(StringUtils.getFileName(catalog.getName()))
+			.append("</title><link rel='stylesheet' type='text/css' href='")
+			.append(StringUtils.relativePath(Global.NOTE_PATH, catalog.getPath(), Global.CSS_MARKDOWN))
 			.append("'></head><body><div id='write'>")
 			.append(html)
 			.append("</div></body></html>");

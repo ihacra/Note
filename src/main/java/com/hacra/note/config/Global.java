@@ -15,11 +15,13 @@ public final class Global {
 	/** CSS样式模板 */
 	public final static String SRC_THEME_PATH = CURRENT_PATH + "\\src\\main\\resources\\static\\style\\theme.css";
 	public final static String SRC_MARKDOWN_PATH = CURRENT_PATH + "\\src\\main\\resources\\static\\style\\markdown.css";
+	public final static String SRC_INDEX_PATH = CURRENT_PATH + "\\src\\main\\resources\\static\\template\\index.html";
 	
 	/** 本地CSS样式 */
 	public final static String LOG_NAME = "note.log";
 	public final static String CSS_THEME = "theme.css";
 	public final static String CSS_MARKDOWN = "markdown.css";
+	public final static String HTML_INDEX = "index.html";
 	
 	/** Markdown文件后缀名 */
 	public final static String MARKDOWN_SUFFIX = ".md";

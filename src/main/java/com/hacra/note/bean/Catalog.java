@@ -3,8 +3,6 @@ package com.hacra.note.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hacra.note.utils.StringUtils;
-
 /**
  * Catalog
  * 
@@ -16,7 +14,6 @@ public class Catalog {
 	private int level;
 	private String name;
 	private String path;
-	private String shortName;
 	private boolean directory;
 	private List<Catalog> detList = new ArrayList<>();
 	
@@ -45,7 +42,6 @@ public class Catalog {
 
 	public void setName(String name) {
 		this.name = name;
-		this.shortName = StringUtils.getFileName(name);
 	}
 
 	public String getPath() {
@@ -71,10 +67,6 @@ public class Catalog {
 	public void setDirectory(boolean directory) {
 		this.directory = directory;
 	}
-
-	public String getShortName() {
-		return shortName;
-	}
 	
 	public String showInfo() {
 		return path;
@@ -82,7 +74,7 @@ public class Catalog {
 
 	@Override
 	public String toString() {
-		return "Catalog [level=" + level + ", directory=" + directory + ", shortName=" + shortName + ", path=" + path
+		return "Catalog [level=" + level + ", directory=" + directory + ", name=" + name + ", path=" + path
 				+ "]";
 	}
 }

@@ -18,21 +18,31 @@ import com.hacra.note.config.Global;
  */
 public final class NoteUtils {
 
+	private final static StringBuilder CATALOG_HTML = new StringBuilder(1024);
+	public final static StringBuilder NOTE_LOG = new StringBuilder(1024);
+	
 	/**
 	 * 初始化项目
 	 */
 	public static void init() {
 		String themePath = Global.NOTE_PATH + "\\" + Global.CSS_THEME;
 		String markdownPath = Global.NOTE_PATH + "\\" + Global.CSS_MARKDOWN;
+		String indexPath = Global.NOTE_PATH + "\\" + Global.HTML_INDEX;
 		try {
-			File srcfile = new File(Global.SRC_THEME_PATH);
+			File srcfile = null;
 			File outFile = new File(themePath);
 			if (!outFile.exists()) {
+				srcfile = new File(Global.SRC_THEME_PATH);
 				Files.copy(srcfile.toPath(), outFile.toPath());
 			}
-			srcfile = new File(Global.SRC_MARKDOWN_PATH);
 			outFile = new File(markdownPath);
 			if (!outFile.exists()) {
+				srcfile = new File(Global.SRC_MARKDOWN_PATH);
+				Files.copy(srcfile.toPath(), outFile.toPath());
+			}
+			outFile = new File(indexPath);
+			if (!outFile.exists()) {
+				srcfile = new File(Global.SRC_INDEX_PATH);
 				Files.copy(srcfile.toPath(), outFile.toPath());
 			}
 		} catch (IOException e) {
@@ -80,15 +90,7 @@ public final class NoteUtils {
 			if (files != null && files.length > 0) {
 				for (File det : files) {
 					String name = det.getName();
-					if (!det.isDirectory()) {
-						if (StringUtils.sameFileType(name, Global.MARKDOWN_SUFFIX) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
-							Catalog catalog = new Catalog(false);
-							catalog.setLevel(level);
-							catalog.setName(name);
-							catalog.setPath(det.getPath());
-							catalogList.add(catalog);
-						}
-					} else {
+					if (det.isDirectory()) {
 						if (!StringUtils.contains(name, Global.EXCLUDE_FOLDERS)) {
 							List<Catalog> detList = match(det.getAbsolutePath(), level+1);
 							if (!detList.isEmpty()) {
@@ -99,10 +101,36 @@ public final class NoteUtils {
 								catalogList.add(catalog);
 							}
 						}
+					} else {
+						if (StringUtils.sameFileType(name, Global.MARKDOWN_SUFFIX) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
+							Catalog catalog = new Catalog(false);
+							catalog.setLevel(level);
+							catalog.setName(name);
+							catalog.setPath(det.getPath());
+							catalogList.add(catalog);
+						}
 					}
 				}
 			}
 		}
 		return catalogList;
+	}
+	
+	/**
+	 * 获取目录html
+	 * @return
+	 */
+	public static String getCatalogHtml() {
+		String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'><ul>";
+		String suffix = "</ul>";
+		return prefix + CATALOG_HTML.toString() + suffix;
+	}
+	
+	/**
+	 * 添加目录内容html
+	 * @param value
+	 */
+	public static void appendCatalogHtml(String value) {
+		CATALOG_HTML.append(value);
 	}
 }
