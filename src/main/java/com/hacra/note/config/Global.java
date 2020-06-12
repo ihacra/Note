@@ -12,7 +12,7 @@ public final class Global {
 	public final static int LOG_LEVEL = 1;
 	
 	/** 项目路径 */
-	public final static String PATH_NOTE = "F:\\Note";
+	public static String PATH_NOTE = null;
 	public final static String PATH_CURRENT = System.getProperty("user.dir");
 	
 	/** CSS样式模板 */
@@ -20,10 +20,7 @@ public final class Global {
 			PATH_CURRENT + "\\src\\main\\resources\\static\\style\\theme.css",
 			PATH_CURRENT + "\\src\\main\\resources\\static\\style\\markdown.css",
 			PATH_CURRENT + "\\src\\main\\resources\\static\\template\\index.html",
-			PATH_CURRENT + "\\src\\main\\resources\\static\\images\\file.png",
-			PATH_CURRENT + "\\src\\main\\resources\\static\\images\\file2.png",
-			PATH_CURRENT + "\\src\\main\\resources\\static\\images\\folder.png",
-			PATH_CURRENT + "\\src\\main\\resources\\static\\images\\folder2.png"
+			PATH_CURRENT + "\\src\\main\\resources\\static\\images\\img.png"
 	};
 	
 	/** 本地CSS样式 */

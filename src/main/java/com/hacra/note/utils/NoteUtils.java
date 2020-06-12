@@ -18,7 +18,6 @@ public final class NoteUtils {
 
 	private static Date LAST_MODIFY_DATE = null;
 	private final static StringBuilder CATALOG_HTML = new StringBuilder(1024);
-	private final static StringBuilder NOTE_LOG = new StringBuilder(1024);
 	
 	/**
 	 * 初始化项目
@@ -39,7 +38,7 @@ public final class NoteUtils {
 				FileUtils.copy(srcPath, Global.PATH_NOTE + "\\" + StringUtils.getFileNameSuffix(srcPath));
 			}
 		}
-		LogUtils.info(NoteUtils.class, "上传编译时间：" + DateUtils.formatDate(LAST_MODIFY_DATE, DateUtils.DATE_TIME_PATTERN));
+		LogUtils.info(NoteUtils.class, "上次编译时间：" + DateUtils.formatDate(LAST_MODIFY_DATE, DateUtils.DATE_TIME_PATTERN));
 	}
 	
 	/**
@@ -103,13 +102,11 @@ public final class NoteUtils {
 	 * 创建目录文件
 	 */
 	public static void buildCatalog() {
-		if (NOTE_LOG.length() > 0) {
-			String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'>"
-					+ "<script>window.onload=function(){var b=document.getElementsByTagName('a');if(b!=null){b[0].click()}};function show(f){var e=document.getElementsByClassName('active');for(var d=0;d<e.length;d++){e[d].className='file'}f.className='active'}</script><ul>";
-			String suffix = "</ul>";
-			File catalogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_HTML_CATALOG);
-			FileUtils.writer(catalogFile, prefix + CATALOG_HTML.toString() + suffix);
-		}
+		String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'>"
+				+ "<script>window.onload=function(){var b=document.getElementsByTagName('a');if(b!=null){b[0].click()}};function show(f){var e=document.getElementsByClassName('active');for(var d=0;d<e.length;d++){e[d].className='file'}f.className='active'}</script><ul>";
+		String suffix = "</ul>";
+		File catalogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_HTML_CATALOG);
+		FileUtils.writer(catalogFile, prefix + CATALOG_HTML.toString() + suffix);
 	}
 
 	/**
@@ -117,8 +114,7 @@ public final class NoteUtils {
 	 */
 	public static void updateLog() {
 		File noteLogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
-		String content = DateUtils.getDate(DateUtils.DATE_TIME_PATTERN) + "\n" + NOTE_LOG.toString();
-		FileUtils.writer(noteLogFile, content);
+		FileUtils.writer(noteLogFile, LogUtils.getNoteLog());
 	}
 	
 	/**
@@ -127,13 +123,5 @@ public final class NoteUtils {
 	 */
 	public static void appendCatalogHtml(String value) {
 		CATALOG_HTML.append(value);
-	}
-	
-	/**
-	 * 添加日志内容
-	 * @param value
-	 */
-	public static void appendNoteLog(String value) {
-		NOTE_LOG.append(value);
 	}
 }

@@ -38,8 +38,6 @@ public final class MarkdownUtils {
 				if (file.exists()) {
 					if (file.lastModified() >= lastModifyTime) {
 						markdownToHtml(file, catalog);
-						NoteUtils.appendNoteLog(catalog.showInfo());
-						NoteUtils.appendNoteLog("\n");
 					}
 					NoteUtils.appendCatalogHtml("<li><a class='file' target='showframe' href='");
 					NoteUtils.appendCatalogHtml(StringUtils.replaceSuffix(catalog.getShortPath(), Global.SUFFIX_HTML));

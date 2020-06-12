@@ -53,15 +53,16 @@ li > a:hover {
 
 .active:before {
 	content: "";
-	width: 1rem;
-	height: 1rem;
-	margin-right: 0.3rem;
-	display: inline-block;
-	background-size: 100%;
-	background-image: url(file.png);
-	background-repeat: no-repeat;
-	position: relative;
-	top: 2px;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-right: 0.3rem;
+    display: inline-block;
+    background-size: 390%;
+    background-image: url(img.png);
+    background-repeat: no-repeat;
+    background-position: 2px 0px;
+    position: relative;
+    top: 2px;
 }
 
 .folder {
@@ -74,22 +75,24 @@ li > a:hover {
 	height: 1.1rem;
 	margin-right: 0.3rem;
 	display: inline-block;
-	background-size: 100%;
-	background-image: url(folder2.png);
+	background-size: 390%;
+	background-image: url(img.png);
 	background-repeat: no-repeat;
+	background-position: -47px 0px;
 	position: relative;
 	top: 2px;
 }
 
 .file:before {
 	content: "";
-	width: 1rem;
-	height: 1rem;
-	margin-right: 0.3rem;
-	display: inline-block;
-	background-size: 100%;
-	background-image: url(file2.png);
-	background-repeat: no-repeat;
-	position: relative;
-	top: 2px;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-right: 0.3rem;
+    display: inline-block;
+    background-size: 390%;
+    background-image: url(img.png);
+    background-repeat: no-repeat;
+    background-position: -13px 0px;
+    position: relative;
+    top: 2px;
 }
