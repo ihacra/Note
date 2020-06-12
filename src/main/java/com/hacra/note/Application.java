@@ -1,12 +1,10 @@
 package com.hacra.note;
 
-import java.util.Date;
 import java.util.List;
 
 import com.hacra.note.bean.Catalog;
-import com.hacra.note.config.Global;
 import com.hacra.note.utils.DateUtils;
-import com.hacra.note.utils.MarkdownUtils;
+import com.hacra.note.utils.LogUtils;
 import com.hacra.note.utils.NoteUtils;
 
 /**
@@ -18,17 +16,13 @@ import com.hacra.note.utils.NoteUtils;
 public class Application {
 	
 	public static void main(String[] args) {
-		Global.NOTE_PATH = "E:\\Note";
-		
-		NoteUtils.init();
-		Date lastModifyDate = NoteUtils.getLastModifyDate();
-		List<Catalog> catalogList = NoteUtils.match(Global.NOTE_PATH);
-		MarkdownUtils.markdownToHtml(catalogList, lastModifyDate.getTime());
+		NoteUtils.initNote();
+		NoteUtils.markdownToHtml();
+		NoteUtils.buildCatalog();
+		NoteUtils.updateLog();
 
-		System.out.println(DateUtils.formatDate(lastModifyDate, DateUtils.DATE_TIME_PATTERN));
-		System.out.println(NoteUtils.NOTE_LOG.toString());
-		print(catalogList);		
-		System.out.println(NoteUtils.getCatalogHtml().toString());
+		LogUtils.info(Application.class, DateUtils.formatDate(NoteUtils.getLastModifyDate(), DateUtils.DATE_TIME_PATTERN));
+		LogUtils.info(Application.class, NoteUtils.NOTE_LOG.toString());
 	}
 	
 	public static void print(List<Catalog> catalogList) {

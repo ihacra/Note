@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * FileUtils
@@ -32,6 +33,7 @@ public class FileUtils {
 				while ((temp = bufferedReader.readLine()) != null) {
 					stringBuilder.append(temp).append("\n");
 				}
+				LogUtils.info(FileUtils.class, "读取文件：" + file.getPath());
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -70,6 +72,7 @@ public class FileUtils {
 			fileWriter = new FileWriter(file);
 			bufferedWriter = new BufferedWriter(fileWriter);
 			bufferedWriter.write(content);
+			LogUtils.info(FileUtils.class, "生成文件：" + file.getPath());
 		} catch(IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -89,6 +92,24 @@ public class FileUtils {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	/**
+	 * 复制文件
+	 * @param srcfile
+	 * @param outFile
+	 */
+	public static void copy(File srcfile, File outFile) {
+		try {
+			if (srcfile.exists()) {
+				Files.copy(srcfile.toPath(), outFile.toPath());
+				LogUtils.info(FileUtils.class, "复制文件：" + outFile.getPath());
+				return;
+			}
+		} catch (IOException e) {
+			LogUtils.info(FileUtils.class, "文件复制失败");
+			e.printStackTrace();
 		}
 	}
 }

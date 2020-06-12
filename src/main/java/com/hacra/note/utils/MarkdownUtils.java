@@ -28,7 +28,7 @@ public final class MarkdownUtils {
 	public static void markdownToHtml(List<Catalog> catalogList, long lastModifyTime) {
 		for (Catalog catalog : catalogList) {
 			if (catalog.isDirectory()) {
-				NoteUtils.appendCatalogHtml("<li>");
+				NoteUtils.appendCatalogHtml("<li class='folder'>");
 				NoteUtils.appendCatalogHtml(catalog.getName());
 				NoteUtils.appendCatalogHtml("<ul>");
 				markdownToHtml(catalog.getDetList(), lastModifyTime);
@@ -40,9 +40,11 @@ public final class MarkdownUtils {
 						markdownToHtml(file, catalog);
 						NoteUtils.NOTE_LOG.append(catalog.showInfo()).append("\n");
 					}
-					NoteUtils.appendCatalogHtml("<li>");
-					NoteUtils.appendCatalogHtml(catalog.getName());
-					NoteUtils.appendCatalogHtml("</li>");
+					NoteUtils.appendCatalogHtml("<li><a class='file' target='showframe' href='");
+					NoteUtils.appendCatalogHtml(StringUtils.replaceSuffix(catalog.getShortPath(), Global.SUFFIX_HTML));
+					NoteUtils.appendCatalogHtml("' onclick='show(this)'>");
+					NoteUtils.appendCatalogHtml(catalog.getShortName());
+					NoteUtils.appendCatalogHtml("</a></li>");
 				}
 			}
 		}
@@ -59,11 +61,11 @@ public final class MarkdownUtils {
 		stringBuilder.append("<html><head><title>")
 			.append(StringUtils.getFileName(catalog.getName()))
 			.append("</title><link rel='stylesheet' type='text/css' href='")
-			.append(StringUtils.relativePath(Global.NOTE_PATH, catalog.getPath(), Global.CSS_MARKDOWN))
+			.append(StringUtils.relativePath(Global.PATH_NOTE, catalog.getPath(), Global.OUT_CSS_MARKDOWN))
 			.append("'></head><body><div id='write'>")
 			.append(html)
 			.append("</div></body></html>");
-		File htmlFile = new File(StringUtils.replaceSuffix(file.getPath(), Global.HTML_SUFFIX));
+		File htmlFile = new File(StringUtils.replaceSuffix(file.getPath(), Global.SUFFIX_HTML));
 		FileUtils.writer(htmlFile, stringBuilder.toString());
 	}
 }

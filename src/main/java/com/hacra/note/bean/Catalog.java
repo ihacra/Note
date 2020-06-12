@@ -3,6 +3,9 @@ package com.hacra.note.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hacra.note.config.Global;
+import com.hacra.note.utils.StringUtils;
+
 /**
  * Catalog
  * 
@@ -70,6 +73,14 @@ public class Catalog {
 	
 	public String showInfo() {
 		return path;
+	}
+
+	public String getShortName() {
+		return StringUtils.getFileName(name);
+	}
+	
+	public String getShortPath() {
+		return StringUtils.substringByPrefix(Global.PATH_NOTE + "\\", path);
 	}
 
 	@Override

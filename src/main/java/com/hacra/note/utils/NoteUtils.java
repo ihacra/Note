@@ -1,8 +1,6 @@
 package com.hacra.note.utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,36 +16,33 @@ import com.hacra.note.config.Global;
  */
 public final class NoteUtils {
 
+	private static Date LAST_MODIFY_DATE = null;
 	private final static StringBuilder CATALOG_HTML = new StringBuilder(1024);
 	public final static StringBuilder NOTE_LOG = new StringBuilder(1024);
 	
 	/**
 	 * 初始化项目
 	 */
-	public static void init() {
-		String themePath = Global.NOTE_PATH + "\\" + Global.CSS_THEME;
-		String markdownPath = Global.NOTE_PATH + "\\" + Global.CSS_MARKDOWN;
-		String indexPath = Global.NOTE_PATH + "\\" + Global.HTML_INDEX;
-		try {
-			File srcfile = null;
-			File outFile = new File(themePath);
-			if (!outFile.exists()) {
-				srcfile = new File(Global.SRC_THEME_PATH);
-				Files.copy(srcfile.toPath(), outFile.toPath());
+	public static void initNote() {
+		File logFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NAME);
+		String content = FileUtils.readFile(logFile); 
+		if (content != null && content.length() >= DateUtils.DATE_TIME_PATTERN.length()) {
+			String regex = "^[\\d]{4}-[\\d]{2}-[\\d]{2}\\s[\\d]{2}:[\\d]{2}:[\\d]{2}$";
+			content = content.substring(0, DateUtils.DATE_TIME_PATTERN.length());
+			if (content.matches(regex)) {
+				LAST_MODIFY_DATE = DateUtils.parseDate(content, DateUtils.DATE_TIME_PATTERN);
 			}
-			outFile = new File(markdownPath);
-			if (!outFile.exists()) {
-				srcfile = new File(Global.SRC_MARKDOWN_PATH);
-				Files.copy(srcfile.toPath(), outFile.toPath());
-			}
-			outFile = new File(indexPath);
-			if (!outFile.exists()) {
-				srcfile = new File(Global.SRC_INDEX_PATH);
-				Files.copy(srcfile.toPath(), outFile.toPath());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		if (LAST_MODIFY_DATE == null) {
+			LAST_MODIFY_DATE = new Date(0);
+			String themePath = Global.PATH_NOTE + "\\" + Global.OUT_CSS_THEME;
+			FileUtils.copy(new File(Global.SRC_THEME_PATH), new File(themePath));
+			String markdownPath = Global.PATH_NOTE + "\\" + Global.OUT_CSS_MARKDOWN;
+			FileUtils.copy(new File(Global.SRC_MARKDOWN_PATH), new File(markdownPath));
+			String indexPath = Global.PATH_NOTE + "\\" + Global.OUT_HTML_INDEX;
+			FileUtils.copy(new File(Global.SRC_INDEX_PATH), new File(indexPath));
+		}
+		LogUtils.info(NoteUtils.class, "上次");
 	}
 	
 	/**
@@ -56,16 +51,7 @@ public final class NoteUtils {
 	 * @return
 	 */
 	public static Date getLastModifyDate() {
-		File logFile = new File(Global.NOTE_PATH + "\\" + Global.LOG_NAME);
-		String content = FileUtils.readFile(logFile); 
-		if (content != null && content.length() >= DateUtils.DATE_TIME_PATTERN.length()) {
-			String regex = "^[\\d]{4}-[\\d]{2}-[\\d]{2}\\s[\\d]{2}:[\\d]{2}:[\\d]{2}$";
-			content = content.substring(0, DateUtils.DATE_TIME_PATTERN.length());
-			if (content.matches(regex)) {
-				return DateUtils.parseDate(content, DateUtils.DATE_TIME_PATTERN);
-			}
-		}
-		return new Date(0);
+		return LAST_MODIFY_DATE;
 	}
 	
 	/**
@@ -73,7 +59,7 @@ public final class NoteUtils {
 	 * @param path 
 	 * @return
 	 */
-	public static List<Catalog> match(String path) {
+	private static List<Catalog> match(String path) {
 		return match(path, 0);
 	}
 	
@@ -82,7 +68,7 @@ public final class NoteUtils {
 	 * @param path 
 	 * @return
 	 */
-	public static List<Catalog> match(String path, int level) {
+	private static List<Catalog> match(String path, int level) {
 		List<Catalog> catalogList = new ArrayList<Catalog>(32);
 		File file = new File(path);
 		if (file.exists()) {
@@ -102,7 +88,7 @@ public final class NoteUtils {
 							}
 						}
 					} else {
-						if (StringUtils.sameFileType(name, Global.MARKDOWN_SUFFIX) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
+						if (StringUtils.sameFileType(name, Global.SUFFIX_MARKDOWN) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
 							Catalog catalog = new Catalog(false);
 							catalog.setLevel(level);
 							catalog.setName(name);
@@ -117,13 +103,23 @@ public final class NoteUtils {
 	}
 	
 	/**
-	 * 获取目录html
-	 * @return
+	 * 将最后修改日期lastModifyDate之后的修改文件编译为html
+	 * @param catalogList
 	 */
-	public static String getCatalogHtml() {
-		String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'><ul>";
+	public static void markdownToHtml() {
+		List<Catalog> catalogList = match(Global.PATH_NOTE);
+		MarkdownUtils.markdownToHtml(catalogList, LAST_MODIFY_DATE.getTime());
+	}
+	
+	/**
+	 * 创建目录文件
+	 */
+	public static void buildCatalog() {
+		String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'>"
+				+ "<script>function show(obj){obj.className='active'}</script><ul>";
 		String suffix = "</ul>";
-		return prefix + CATALOG_HTML.toString() + suffix;
+		File catalogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_HTML_CATALOG);
+		FileUtils.writer(catalogFile, prefix + CATALOG_HTML.toString() + suffix);
 	}
 	
 	/**
@@ -132,5 +128,12 @@ public final class NoteUtils {
 	 */
 	public static void appendCatalogHtml(String value) {
 		CATALOG_HTML.append(value);
+	}
+	
+	/**
+	 * 更新日志
+	 */
+	public static void updateLog() {
+		
 	}
 }
