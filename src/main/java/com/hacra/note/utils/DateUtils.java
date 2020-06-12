@@ -17,7 +17,7 @@ public class DateUtils {
 	public final static String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 	/**
-	 * 获取当前日期
+	 * 获取当前时间
 	 * @return
 	 */
 	public static Date newDate() {

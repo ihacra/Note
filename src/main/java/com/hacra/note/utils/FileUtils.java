@@ -100,10 +100,15 @@ public class FileUtils {
 	 * @param srcfile
 	 * @param outFile
 	 */
-	public static void copy(File srcfile, File outFile) {
+	public static void copy(String srcPath, String outPath) {
 		try {
-			if (srcfile.exists()) {
-				Files.copy(srcfile.toPath(), outFile.toPath());
+			File srcFile = new File(srcPath);
+			File outFile = new File(outPath);
+			if (srcFile.exists()) {
+				if (outFile.exists()) {
+					Files.delete(outFile.toPath());
+				}
+				Files.copy(srcFile.toPath(), outFile.toPath());
 				LogUtils.info(FileUtils.class, "复制文件：" + outFile.getPath());
 				return;
 			}

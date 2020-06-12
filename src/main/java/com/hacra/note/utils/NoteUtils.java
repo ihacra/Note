@@ -18,13 +18,13 @@ public final class NoteUtils {
 
 	private static Date LAST_MODIFY_DATE = null;
 	private final static StringBuilder CATALOG_HTML = new StringBuilder(1024);
-	public final static StringBuilder NOTE_LOG = new StringBuilder(1024);
+	private final static StringBuilder NOTE_LOG = new StringBuilder(1024);
 	
 	/**
 	 * 初始化项目
 	 */
 	public static void initNote() {
-		File logFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NAME);
+		File logFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
 		String content = FileUtils.readFile(logFile); 
 		if (content != null && content.length() >= DateUtils.DATE_TIME_PATTERN.length()) {
 			String regex = "^[\\d]{4}-[\\d]{2}-[\\d]{2}\\s[\\d]{2}:[\\d]{2}:[\\d]{2}$";
@@ -35,27 +35,15 @@ public final class NoteUtils {
 		}
 		if (LAST_MODIFY_DATE == null) {
 			LAST_MODIFY_DATE = new Date(0);
-			String themePath = Global.PATH_NOTE + "\\" + Global.OUT_CSS_THEME;
-			FileUtils.copy(new File(Global.SRC_THEME_PATH), new File(themePath));
-			String markdownPath = Global.PATH_NOTE + "\\" + Global.OUT_CSS_MARKDOWN;
-			FileUtils.copy(new File(Global.SRC_MARKDOWN_PATH), new File(markdownPath));
-			String indexPath = Global.PATH_NOTE + "\\" + Global.OUT_HTML_INDEX;
-			FileUtils.copy(new File(Global.SRC_INDEX_PATH), new File(indexPath));
+			for (String srcPath : Global.SRC_STATIC_PATH) {
+				FileUtils.copy(srcPath, Global.PATH_NOTE + "\\" + StringUtils.getFileNameSuffix(srcPath));
+			}
 		}
-		LogUtils.info(NoteUtils.class, "上次");
+		LogUtils.info(NoteUtils.class, "上传编译时间：" + DateUtils.formatDate(LAST_MODIFY_DATE, DateUtils.DATE_TIME_PATTERN));
 	}
 	
 	/**
 	 * 获取日志中最后编译日期
-	 * @param path
-	 * @return
-	 */
-	public static Date getLastModifyDate() {
-		return LAST_MODIFY_DATE;
-	}
-	
-	/**
-	 * 查找Markdown文件
 	 * @param path 
 	 * @return
 	 */
@@ -115,11 +103,22 @@ public final class NoteUtils {
 	 * 创建目录文件
 	 */
 	public static void buildCatalog() {
-		String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'>"
-				+ "<script>function show(obj){obj.className='active'}</script><ul>";
-		String suffix = "</ul>";
-		File catalogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_HTML_CATALOG);
-		FileUtils.writer(catalogFile, prefix + CATALOG_HTML.toString() + suffix);
+		if (NOTE_LOG.length() > 0) {
+			String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'>"
+					+ "<script>window.onload=function(){var b=document.getElementsByTagName('a');if(b!=null){b[0].click()}};function show(f){var e=document.getElementsByClassName('active');for(var d=0;d<e.length;d++){e[d].className='file'}f.className='active'}</script><ul>";
+			String suffix = "</ul>";
+			File catalogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_HTML_CATALOG);
+			FileUtils.writer(catalogFile, prefix + CATALOG_HTML.toString() + suffix);
+		}
+	}
+
+	/**
+	 * 更新日志
+	 */
+	public static void updateLog() {
+		File noteLogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
+		String content = DateUtils.getDate(DateUtils.DATE_TIME_PATTERN) + "\n" + NOTE_LOG.toString();
+		FileUtils.writer(noteLogFile, content);
 	}
 	
 	/**
@@ -131,9 +130,10 @@ public final class NoteUtils {
 	}
 	
 	/**
-	 * 更新日志
+	 * 添加日志内容
+	 * @param value
 	 */
-	public static void updateLog() {
-		
+	public static void appendNoteLog(String value) {
+		NOTE_LOG.append(value);
 	}
 }

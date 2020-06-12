@@ -36,7 +36,7 @@ public class StringUtils {
 	 * @return
 	 */
 	public static boolean sameFileType(String name, String suffix) {
-		return name != null && suffix.equals(getFileSuffix(name));
+		return name != null && suffix.equals(getFileSuffix(name).toLowerCase());
 	}
 	
 	/**
@@ -44,15 +44,24 @@ public class StringUtils {
 	 * @param name
 	 * @return
 	 */
-	public static String getFileName(String name) {
-		if (name == null) {
+	public static String getFileName(String path) {
+		if (path == null) {
 			return null;
 		}
-		int index = name.lastIndexOf(".");
-		if (index == -1) {
-			return name;
+		int index0 = path.lastIndexOf("\\");
+		int index1 = path.lastIndexOf(".");
+		if (index0 == -1) {
+			if (index1 == -1) {
+				return path;
+			} else {
+				return path.substring(0, index1);
+			}
 		} else {
-			return name.substring(0, index);
+			if (index1 == -1) {
+				return path.substring(index0+1);
+			} else {
+				return path.substring(index0+1, index1);
+			}
 		}
 	}
 	
@@ -61,15 +70,32 @@ public class StringUtils {
 	 * @param name
 	 * @return
 	 */
-	public static String getFileSuffix(String name) {
-		if (name == null) {
+	public static String getFileSuffix(String path) {
+		if (path == null) {
 			return null;
 		}
-		int index = name.lastIndexOf(".");
+		int index = path.lastIndexOf(".");
 		if (index == -1) {
 			return null;
 		} else {
-			return name.substring(index).toLowerCase();
+			return path.substring(index);
+		}
+	}
+	
+	/**
+	 * 获取路径path中的文件名称及后缀名
+	 * @param name
+	 * @return
+	 */
+	public static String getFileNameSuffix(String path) {
+		if (path == null) {
+			return null;
+		}
+		int index = path.lastIndexOf("\\");
+		if (index == -1) {
+			return path;
+		} else {
+			return path.substring(index+1);
 		}
 	}
 	

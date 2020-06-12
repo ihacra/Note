@@ -38,7 +38,8 @@ public final class MarkdownUtils {
 				if (file.exists()) {
 					if (file.lastModified() >= lastModifyTime) {
 						markdownToHtml(file, catalog);
-						NoteUtils.NOTE_LOG.append(catalog.showInfo()).append("\n");
+						NoteUtils.appendNoteLog(catalog.showInfo());
+						NoteUtils.appendNoteLog("\n");
 					}
 					NoteUtils.appendCatalogHtml("<li><a class='file' target='showframe' href='");
 					NoteUtils.appendCatalogHtml(StringUtils.replaceSuffix(catalog.getShortPath(), Global.SUFFIX_HTML));
@@ -61,7 +62,7 @@ public final class MarkdownUtils {
 		stringBuilder.append("<html><head><title>")
 			.append(StringUtils.getFileName(catalog.getName()))
 			.append("</title><link rel='stylesheet' type='text/css' href='")
-			.append(StringUtils.relativePath(Global.PATH_NOTE, catalog.getPath(), Global.OUT_CSS_MARKDOWN))
+			.append(StringUtils.relativePath(Global.PATH_NOTE, catalog.getPath(), StringUtils.getFileNameSuffix(Global.SRC_STATIC_PATH[1])))
 			.append("'></head><body><div id='write'>")
 			.append(html)
 			.append("</div></body></html>");
