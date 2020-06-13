@@ -109,7 +109,7 @@ public class FileUtils {
 					Files.delete(outFile.toPath());
 				}
 				Files.copy(srcFile.toPath(), outFile.toPath());
-				LogUtils.info(FileUtils.class, "复制文件：" + outFile.getPath());
+				LogUtils.info(FileUtils.class, "复制文件：" + srcPath + " -> " + outPath);
 				return;
 			}
 		} catch (IOException e) {
