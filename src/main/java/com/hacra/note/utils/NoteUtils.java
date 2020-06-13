@@ -22,7 +22,11 @@ public final class NoteUtils {
 	/**
 	 * 初始化项目
 	 */
-	public static void initNote() {
+	public static void initNote(String path) {
+		// 将相对路径转为绝对路径
+		File noteFile = new File(path);
+		Global.PATH_NOTE = noteFile.getAbsolutePath();
+		// 获取上次编译时间
 		File logFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
 		String content = FileUtils.readFile(logFile); 
 		if (content != null && content.length() >= DateUtils.DATE_TIME_PATTERN.length()) {
@@ -32,6 +36,7 @@ public final class NoteUtils {
 				LAST_MODIFY_DATE = DateUtils.parseDate(content, DateUtils.DATE_TIME_PATTERN);
 			}
 		}
+		// 若第一次编译则初始化文件
 		if (LAST_MODIFY_DATE == null) {
 			LAST_MODIFY_DATE = new Date(0);
 			for (String srcPath : Global.SRC_STATIC_PATHS) {
