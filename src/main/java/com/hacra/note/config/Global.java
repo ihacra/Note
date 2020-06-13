@@ -16,16 +16,15 @@ public final class Global {
 	public final static String PATH_CURRENT = System.getProperty("user.dir");
 	
 	/** CSS样式模板 */
-	public final static String[] SRC_STATIC_PATH = {
+	public final static String SRC_STATIC_INDEX_PATH = PATH_CURRENT + "\\src\\main\\resources\\static\\template\\index.html";
+	public final static String[] SRC_STATIC_PATHS = {
 			PATH_CURRENT + "\\src\\main\\resources\\static\\style\\theme.css",
 			PATH_CURRENT + "\\src\\main\\resources\\static\\style\\markdown.css",
-			PATH_CURRENT + "\\src\\main\\resources\\static\\template\\index.html",
 			PATH_CURRENT + "\\src\\main\\resources\\static\\images\\img.png"
 	};
 	
-	/** 本地CSS样式 */
+	/** 日志文件 */
 	public final static String OUT_LOG_NOTE = "note.log";
-	public final static String OUT_HTML_CATALOG = "catalog.html";
 	
 	/** Markdown文件后缀名 */
 	public final static String SUFFIX_MARKDOWN = ".md";

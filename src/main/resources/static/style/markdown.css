@@ -32,7 +32,12 @@ body {
 #write {
     max-width: none;
     margin: 0 auto;
+	min-width: 300px;
 	padding: 10px 20px 10px 20px;
+}
+
+#write img {
+	max-width: 100%;
 }
 
 #write p {

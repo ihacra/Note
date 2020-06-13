@@ -2,12 +2,65 @@
 <head>
 	<meta charset="utf-8">
 	<title>Note</title>
-	<link rel='stylesheet' type='text/css' href='theme.css'>
+	<link rel="stylesheet" type="text/css" href="theme.css">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<link rel="shortcut icon" href="https://s1.ax1x.com/2020/06/13/tjmna9.png" type="image/x-icon">
+	<script>
+		window.onload=function(){
+			var a=document.getElementsByTagName("a");
+			if(a!=null){a[0].click()}
+			resize()
+		};
+		window.onresize=function(){
+			resize()
+		};
+		function resize(){
+			if(document.documentElement.clientWidth<=900){
+				var b=document.getElementById("sidebar");
+				if(b!=null&&b.style.width!="0px"){
+					var a=document.getElementById("content");
+					b.style.width="0px";
+					a.style.width="100%"
+				}
+			}else{
+				var b=document.getElementById("sidebar");
+				if(b!=null&&b.style.width=="0px"){
+					var a=document.getElementById("content");
+					b.style.width="17rem";
+					a.style.width="calc(100% - 17rem)"
+				}
+			}
+		}
+		function show(a){
+			var b=document.getElementsByClassName("active");
+			for(var c=0;c<b.length;c++){
+				b[c].className="file"
+			}
+			a.className="active";
+			resize()
+		}
+		function menu(){
+			var b=document.getElementById("sidebar");
+			var a=document.getElementById("content");
+			if(b.style.width=="0px"){
+				b.style.width="17rem";
+				a.style.width="calc(100% - 17rem)"
+			}else{
+				b.style.width="0px";
+				a.style.width="100%"
+			}
+		};
+	</script>
 </head>
-<frameset cols="280, *" border="1">
-	<frame src="catalog.html"></frame>
-	<frame name="showframe"></frame>
-</frameset>
+<body>
+	<div class="main">
+		<div id="sidebar" class="sidebar">
+			{{CATALOG}}
+		</div>
+		<div id="content" class="content">
+			<iframe name="showframe"></iframe>
+		</div>
+		<div id="menu" class="menu" onclick="menu()"></div>
+	</div>
+</body>
 </html>

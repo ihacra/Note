@@ -60,7 +60,7 @@ public final class MarkdownUtils {
 		stringBuilder.append("<html><head><title>")
 			.append(StringUtils.getFileName(catalog.getName()))
 			.append("</title><link rel='stylesheet' type='text/css' href='")
-			.append(StringUtils.relativePath(Global.PATH_NOTE, catalog.getPath(), StringUtils.getFileNameSuffix(Global.SRC_STATIC_PATH[1])))
+			.append(StringUtils.relativePath(Global.PATH_NOTE, catalog.getPath(), StringUtils.getFileNameSuffix(Global.SRC_STATIC_PATHS[1])))
 			.append("'></head><body><div id='write'>")
 			.append(html)
 			.append("</div></body></html>");

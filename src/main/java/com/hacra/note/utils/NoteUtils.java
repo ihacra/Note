@@ -34,7 +34,7 @@ public final class NoteUtils {
 		}
 		if (LAST_MODIFY_DATE == null) {
 			LAST_MODIFY_DATE = new Date(0);
-			for (String srcPath : Global.SRC_STATIC_PATH) {
+			for (String srcPath : Global.SRC_STATIC_PATHS) {
 				FileUtils.copy(srcPath, Global.PATH_NOTE + "\\" + StringUtils.getFileNameSuffix(srcPath));
 			}
 		}
@@ -102,11 +102,11 @@ public final class NoteUtils {
 	 * 创建目录文件
 	 */
 	public static void buildCatalog() {
-		String prefix = "<link rel='stylesheet' type='text/css' href='theme.css'>"
-				+ "<script>window.onload=function(){var b=document.getElementsByTagName('a');if(b!=null){b[0].click()}};function show(f){var e=document.getElementsByClassName('active');for(var d=0;d<e.length;d++){e[d].className='file'}f.className='active'}</script><ul>";
-		String suffix = "</ul>";
-		File catalogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_HTML_CATALOG);
-		FileUtils.writer(catalogFile, prefix + CATALOG_HTML.toString() + suffix);
+		File indexFile = new File(Global.SRC_STATIC_INDEX_PATH);
+		File catalogFile = new File(Global.PATH_NOTE + "\\" + StringUtils.getFileNameSuffix(Global.SRC_STATIC_INDEX_PATH));
+		String indexHtml = FileUtils.readFile(indexFile);
+		indexHtml = indexHtml.replace("{{CATALOG}}", "<ul>" + CATALOG_HTML.toString() + "</ul>");
+		FileUtils.writer(catalogFile, indexHtml);
 	}
 
 	/**
