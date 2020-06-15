@@ -21,7 +21,7 @@ public class LogUtils {
 	public static void info(Class<?> clazz, String message) {
 		if (Global.LOG_LEVEL >= LOG_INFO) {
 			message = DateUtils.getDate(DATE_TIME_PATTERN) + " INFO [" + clazz.getName() + "] - " + message;
-			NOTE_LOG.append(message).append("\n");
+			NOTE_LOG.append(message).append("\r\n");
 			System.out.println(message);
 		}
 	}

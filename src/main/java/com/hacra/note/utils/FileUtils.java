@@ -31,10 +31,11 @@ public class FileUtils {
 				bufferedReader = new BufferedReader(fileReader);
 				String temp = null;
 				while ((temp = bufferedReader.readLine()) != null) {
-					stringBuilder.append(temp).append("\n");
+					stringBuilder.append(temp).append("\r\n");
 				}
 				LogUtils.info(FileUtils.class, "读取文件：" + file.getPath());
 			} catch (IOException e) {
+				LogUtils.info(FileUtils.class, "文件读取失败：" + file.getPath());
 				e.printStackTrace();
 			} finally {
 				if (bufferedReader != null) {
@@ -74,6 +75,7 @@ public class FileUtils {
 			bufferedWriter.write(content);
 			LogUtils.info(FileUtils.class, "生成文件：" + file.getPath());
 		} catch(IOException e) {
+			LogUtils.info(FileUtils.class, "文件生成失败：" + file.getPath());
 			e.printStackTrace();
 		} finally {
 			if (bufferedWriter != null) {
@@ -113,8 +115,24 @@ public class FileUtils {
 				return;
 			}
 		} catch (IOException e) {
-			LogUtils.info(FileUtils.class, "文件复制失败");
+			LogUtils.info(FileUtils.class, "文件复制失败：" + srcPath + " -> " + outPath);
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 删除文件
+	 * @param file
+	 */
+	public static void delete(File file) {
+		if (file.exists() && file.isFile()) {
+			if (file.delete()) {
+				LogUtils.info(FileUtils.class, "删除文件：" + file.getPath());
+			} else {
+				LogUtils.info(FileUtils.class, "文件删除失败：" + file.getPath());
+			}
+		} else {
+			LogUtils.info(FileUtils.class, "文件不存在：" + file.getPath());
 		}
 	}
 }

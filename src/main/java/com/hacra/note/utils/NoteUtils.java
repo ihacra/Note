@@ -115,6 +115,31 @@ public final class NoteUtils {
 		indexHtml = indexHtml.replace("{{CATALOG}}", "<ul>" + CATALOG_HTML.toString() + "</ul>");
 		FileUtils.writer(catalogFile, indexHtml);
 	}
+	
+	/**
+	 * 清除已编译的HTML
+	 * @param path
+	 */
+	public static void clear(String path) {
+		File file = new File(path);
+		if (file.exists()) {
+			File[] files = file.listFiles();
+			if (files != null && files.length > 0) {
+				for (File det : files) {
+					String name = det.getName();
+					if (det.isDirectory()) {
+						if (!StringUtils.contains(name, Global.EXCLUDE_FOLDERS)) {
+							clear(det.getAbsolutePath());
+						}
+					} else {
+						if (StringUtils.sameFileType(name, Global.SUFFIX_HTML) && !StringUtils.contains(name, Global.EXCLUDE_FILES)) {
+							FileUtils.delete(det);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * 更新日志
