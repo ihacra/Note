@@ -24,8 +24,10 @@ public final class NoteUtils {
 	 */
 	public static void initNote(String path) {
 		// 将相对路径转为绝对路径
-		File noteFile = new File(path);
-		Global.PATH_NOTE = noteFile.getAbsolutePath();
+		if (Global.FLAG) {
+			File noteFile = new File(path);
+			Global.PATH_NOTE = noteFile.getAbsolutePath();
+		}
 		// 获取上次编译时间
 		File logFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
 		String content = FileUtils.readFile(logFile); 

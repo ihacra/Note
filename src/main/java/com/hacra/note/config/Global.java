@@ -12,8 +12,8 @@ public final class Global {
 	public final static int LOG_LEVEL = 1;
 	
 	/** 是否使用IDE运行 */
-	private final static boolean FLAG = false;
-	public static String PATH_NOTE = null;
+	public final static boolean FLAG = false;
+	public static String PATH_NOTE = "E:\\Note";
 	public final static String PATH_CURRENT = System.getProperty("user.dir");
 	
 	/** CSS样式模板 */
