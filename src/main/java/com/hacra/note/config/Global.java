@@ -13,7 +13,7 @@ public final class Global {
 	
 	/** 是否使用IDE运行 */
 	public final static boolean FLAG = false;
-	public static String PATH_NOTE = "E:\\Note";
+	public static String PATH_NOTE = null;
 	public final static String PATH_CURRENT = System.getProperty("user.dir");
 	
 	/** CSS样式模板 */

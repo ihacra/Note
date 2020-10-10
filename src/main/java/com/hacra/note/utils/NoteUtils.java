@@ -20,14 +20,18 @@ public final class NoteUtils {
 	private final static StringBuilder CATALOG_HTML = new StringBuilder(1024);
 	
 	/**
+	 * 初始化数据
+	 * @param path
+	 */
+	public static void initData(String path) {
+		File noteFile = new File(path);
+		Global.PATH_NOTE = noteFile.getAbsolutePath();
+	}
+	
+	/**
 	 * 初始化项目
 	 */
-	public static void initNote(String path) {
-		// 将相对路径转为绝对路径
-		if (Global.FLAG) {
-			File noteFile = new File(path);
-			Global.PATH_NOTE = noteFile.getAbsolutePath();
-		}
+	public static void initNote() {
 		// 获取上次编译时间
 		File logFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
 		String content = FileUtils.readFile(logFile); 
@@ -147,6 +151,14 @@ public final class NoteUtils {
 	public static void updateLog() {
 		File noteLogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
 		FileUtils.writer(noteLogFile, LogUtils.getNoteLog());
+	}
+	
+	/**
+	 * 清空日志
+	 */
+	public static void clearLog() {
+		File noteLogFile = new File(Global.PATH_NOTE + "\\" + Global.OUT_LOG_NOTE);
+		FileUtils.writer(noteLogFile, null);
 	}
 	
 	/**
